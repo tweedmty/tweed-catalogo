@@ -16,10 +16,10 @@ a{text-decoration:none;color:inherit}.top{position:sticky;top:0;z-index:20;heigh
 </style>
 </head>
 <body>
-<header class="top"><div class="brand"><img src="tweed-logo-sidebar.png" alt="Tweed · Renta y Venta de Vestidos"></div><div class="top-actions"><a class="pill maps" href="https://maps.app.goo.gl/U6nz57LxPy5Y5hpe9" target="_blank" rel="noopener">Cómo llegar</a><a class="pill" href="https://wa.me/528180111006" target="_blank" rel="noopener">WhatsApp</a></div></header>
-<section class="hero"><div class="eyebrow">RENTA Y VENTA DE VESTIDOS</div><h1>Encuentra tu vestido perfecto</h1><p>Explora la colección de Tweed. Busca por nombre o código y filtra por talla y color. El catálogo se actualiza con la información de la tienda.</p></section>
+<header class="top"><div class="brand"><img src="tweed-logo-sidebar.png" alt="Tweed · Renta de Vestidos y Composturas"></div><div class="top-actions"><a class="pill maps" href="https://maps.app.goo.gl/U6nz57LxPy5Y5hpe9" target="_blank" rel="noopener">Cómo llegar</a><a class="pill" href="https://wa.me/528180111006" target="_blank" rel="noopener">WhatsApp</a></div></header>
+<section class="hero"><div class="eyebrow">Renta de Vestidos y Composturas</div><h1>Encuentra tu vestido perfecto</h1><p>Explora la colección de Tweed. Busca por nombre o código y filtra por talla y color. El catálogo se actualiza con la información de la tienda.</p></section>
 <main class="wrap"><div class="toolbar"><div class="field"><input id="q" autocomplete="off" placeholder="Buscar por vestido, código o color…"></div><div class="field"><select id="talla"><option value="">Todas las tallas</option></select></div><div class="field"><select id="color"><option value="">Todos los colores</option></select></div></div><div class="meta"><span class="count" id="count">Cargando catálogo…</span><span>Catálogo Tweed</span></div><section class="grid" id="grid"></section></main>
-<footer class="footer"><strong>Tweed</strong> · Renta y Venta de Vestidos · WhatsApp 81 8011 1006</footer>
+<footer class="footer"><strong>Tweed</strong> · Renta de Vestidos y Composturas · WhatsApp 81 8011 1006</footer>
 <script>
 const API='https://ostuflbmwqfcbqlnfoay.supabase.co/rest/v1/vestidos?select=*&order=created_at.desc';
 const KEY='sb_publishable_kkUVoT1A397CsfZiMgO0Jg_q3jQCyiX';
@@ -32,5 +32,41 @@ function ask(code,name){const msg=`Hola Tweed, me interesa el vestido ${name||''
 function render(){const q=document.getElementById('q').value.trim().toLowerCase(),t=document.getElementById('talla').value,c=document.getElementById('color').value;const list=items.filter(x=>(!q||[x.nombre,x.codigo,x.color,x.talla].some(v=>String(v??'').toLowerCase().includes(q)))&&(!t||String(x.talla)===t)&&(!c||String(x.color)===c));document.getElementById('count').textContent=`${list.length} ${list.length===1?'vestido':'vestidos'}`;document.getElementById('grid').innerHTML=list.length?list.map(x=>{const estado=String(x.estado||'Disponible');return `<article class="card"><div class="photo">${x.foto?`<img src="${esc(x.foto)}" alt="${esc(x.nombre||'Vestido')}" loading="lazy" onerror="this.style.display='none'">`:'T'}<span class="badge ${estado.toLowerCase()==='rentado'?'rentado':''}">${esc(estado)}</span></div><div class="info"><span class="code">${esc(x.codigo||'Sin código')}</span><h2 title="${esc(x.nombre||'Vestido')}">${esc(x.nombre||'Vestido')}</h2><div class="details">Talla <strong>${esc(x.talla||'—')}</strong> · ${esc(x.color||'—')}</div><div class="bottom"><div><span class="price-label">Renta</span><span class="price">${money(priceOf(x))}</span></div><button class="ask" type="button" data-code="${esc(x.codigo||'')}" data-name="${esc(x.nombre||'Vestido')}">Preguntar</button></div></div></article>`}).join(''):'<div class="empty">No encontramos vestidos con esos filtros.</div>';document.querySelectorAll('.ask').forEach(b=>b.addEventListener('click',()=>ask(b.dataset.code,b.dataset.name)))}
 async function load(){try{const r=await fetch(API,{headers:{apikey:KEY,Authorization:'Bearer '+KEY}});if(!r.ok)throw new Error('HTTP '+r.status);items=await r.json();options('talla','talla');options('color','color');render()}catch(e){document.getElementById('count').textContent='No se pudo cargar el catálogo';document.getElementById('grid').innerHTML='<div class="empty">No pudimos cargar el catálogo en este momento. Intenta nuevamente.</div>';console.error(e)}}
 ['q','talla','color'].forEach(id=>document.getElementById(id).addEventListener(id==='q'?'input':'change',render));load();
+</script>
+
+<style>
+.tweed-appointment{max-width:980px;margin:36px auto;padding:30px;border:1px solid #e6d7dd;border-radius:22px;background:#fff;box-shadow:0 8px 28px #4b123015;color:#38162b}
+.tweed-appointment h2{color:#8B0E5A;margin:0 0 10px}.tweed-appointment p{color:#77616d}
+.tweed-appointment form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.tweed-appointment label{display:flex;flex-direction:column;gap:7px;font-size:14px;font-weight:650}
+.tweed-appointment input,.tweed-appointment textarea{box-sizing:border-box;width:100%;border:1px solid #dacbd2;border-radius:11px;padding:13px;font:inherit;color:#38162b;background:#fff}
+.tweed-appointment .wide{grid-column:1/-1}.tweed-appointment button{background:#8B0E5A;color:white;border:0;border-radius:11px;padding:15px 24px;cursor:pointer;font-weight:700}
+.tweed-appointment button:disabled{opacity:.6}.tweed-appointment .hint{font-size:13px}.tweed-appointment .feedback{min-height:22px;font-weight:650}
+@media(max-width:620px){.tweed-appointment{margin:20px 12px;padding:20px}.tweed-appointment form{grid-template-columns:1fr}}
+</style>
+<section class="tweed-appointment" id="agendar-cita" aria-labelledby="cita-titulo">
+<h2 id="cita-titulo">Agenda tu visita a Tweed</h2>
+<p>Solicita tu fecha y horario preferidos. Nuestro equipo confirmará tu cita por WhatsApp o teléfono.</p>
+<form id="tweed-public-cita-form">
+<label>Tu nombre *<input name="nombre" maxlength="100" required autocomplete="name"></label>
+<label>WhatsApp / teléfono *<input name="telefono" type="tel" maxlength="20" minlength="10" required autocomplete="tel" pattern="[0-9+() -]{10,20}"></label>
+<label>Fecha preferida *<input name="fecha" type="date" required></label>
+<label>Hora preferida *<input name="hora" type="time" required></label>
+<label class="wide">Vestido de interés (opcional)<input name="vestido" maxlength="140" placeholder="Nombre o código del vestido"></label>
+<label class="wide">Comentario (opcional)<textarea name="comentario" rows="3" maxlength="400" placeholder="Cuéntanos qué necesitas"></textarea></label>
+<div class="wide hint">Tu solicitud queda pendiente hasta que Tweed confirme el horario. No compartas datos sensibles.</div>
+<button type="submit">Enviar solicitud de cita</button><div class="feedback" id="tweed-cita-respuesta" role="status" aria-live="polite"></div>
+</form></section>
+<script>
+(()=>{const form=document.getElementById('tweed-public-cita-form');const feedback=document.getElementById('tweed-cita-respuesta');
+const date=form.elements.fecha;const today=new Date();date.min=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+form.addEventListener('submit',async e=>{e.preventDefault();const button=form.querySelector('button');button.disabled=true;feedback.textContent='Enviando solicitud…';
+const data=Object.fromEntries(new FormData(form));const body={nombre:data.nombre.trim(),telefono:data.telefono.trim(),fecha:data.fecha,hora:data.hora,vestido:data.vestido.trim()||null,comentario:data.comentario.trim()||null};
+try{if(data.fecha<date.min)throw Error('Selecciona una fecha válida.');
+const r=await fetch('https://ostuflbmwqfcbqlnfoay.supabase.co/rest/v1/solicitudes_citas',{method:'POST',headers:{'apikey':'sb_publishable_kkUVoT1A397CsfZiMgO0Jg_q3jQCyiX','Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(body)});
+if(!r.ok){const err=await r.json().catch(()=>({}));throw Error(err.message||'No se pudo enviar la solicitud.');}
+form.reset();feedback.textContent='¡Solicitud recibida! Tweed se pondrá en contacto para confirmarla.';
+}catch(err){feedback.textContent='No se pudo enviar: '+err.message;console.error(err)}finally{button.disabled=false;}})
+})();
 </script>
 </body></html>
